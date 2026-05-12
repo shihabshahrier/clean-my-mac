@@ -1,14 +1,19 @@
 ---
 name: clean-my-mac
 description: >
-  Safely analyze and recover disk space on macOS. Use this skill whenever the user says
-  "clean my Mac", "free up disk space", "my Mac is full", "storage is full", "Mac is slow",
-  "clear caches", "remove junk", "Xcode taking up space", "Docker cleanup", "npm cache",
-  "node_modules cleanup", "homebrew cleanup", "Time Machine snapshots", "AI models taking space",
-  "clean up my drive", "how much space do I have", or any variation of wanting to recover
-  storage on macOS. Designed for M1/M2/M3 Macs with 256 GB SSDs, works on any Mac.
-  ALWAYS profile the user first. ALWAYS analyze before deleting. ALWAYS confirm before
-  each phase. NEVER touches system files, SIP-protected paths, keychains, or user documents.
+  Analyze macOS disk usage and recover space across 7 staged, safe phases.
+  Profiles the user first, then scans — never deletes without per-phase approval.
+  Protects active tools (npm, Xcode, Docker) with consequence warnings, not just confirms.
+  Works on any Mac; optimized for M1/M2/M3 256 GB SSD.
+license: MIT
+user-invocable: true
+when_to_use: >
+  Use when user says: "clean my Mac", "free up disk space", "my Mac is full",
+  "storage is full", "Mac is slow", "clear caches", "remove junk",
+  "Xcode taking up space", "Docker cleanup", "npm cache", "node_modules cleanup",
+  "homebrew cleanup", "Time Machine snapshots", "AI models taking space",
+  "clean up my drive", "how much space do I have", or any variation of wanting
+  to recover storage on macOS.
 allowed-tools:
   - Bash
   - Read
@@ -19,14 +24,16 @@ allowed-tools:
 
 # Clean My Mac — Skill
 
-Safe, staged, explainable disk cleanup for macOS.
-Recovers real space from real culprits without touching anything the user actually needs.
-
-Read `reference/safe-paths.md` and `reference/dangerous-paths.md` before any deletion.
-Use `reference/cleanup-strategies.md` for exact per-tool commands.
-Use `reference/macos-storage-guide.md` to explain storage categories to the user.
+Recover macOS disk space safely — profile first, scan second, delete only what user approves phase by phase.
 
 ---
+
+## Invocation
+
+| Method | Example |
+|--------|---------|
+| Slash command | `/clean-my-mac` |
+| Natural language | "clean my Mac", "my Mac is full", "free up space" |
 
 ## Locating Scripts
 
@@ -39,7 +46,7 @@ Extract that path as `SKILL_DIR`. All scripts: `bash "$SKILL_DIR/scripts/<name>.
 
 Fallback if not injected:
 ```bash
-SKILL_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+SKILL_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)/skills/clean-my-mac"
 ```
 
 ---
@@ -108,6 +115,10 @@ Not just a confirmation — a warning that explains the real-world consequence:
 ---
 
 ## Phase 0 — Disk Analysis (no deletions)
+
+Load `reference/safe-paths.md` and `reference/dangerous-paths.md` before this phase.
+Use `reference/cleanup-strategies.md` for exact per-tool commands.
+Use `reference/macos-storage-guide.md` to explain storage categories to the user.
 
 After profiling, run the analysis script:
 
@@ -424,3 +435,24 @@ This skill does NOT:
 - Run package installs or system configuration changes
 - Access network resources
 - Use tools beyond the `allowed-tools` list above
+
+---
+
+## Token Efficiency Rules
+
+- Load reference files once per session — don't re-read on each phase
+- Run Phase -1 questions in one message — no back-and-forth per question
+- Present full analysis table before generating cleanup plan — one combined output
+- Per-phase confirmations: one question per phase, wait for answer before next phase
+- Dry-run + confirmation + real-run = 3 steps max per script invocation
+
+---
+
+## Open-Weight Model Rules
+
+- `SKILL_DIR` must be resolved before any `bash` call — never assume a path
+- All `bash` calls use `"$SKILL_DIR/scripts/<name>.sh"` — never inline the full path
+- Never delete without an explicit "yes" from the user in the same turn
+- `has_backup` must equal `yes` before running `cleanup_snapshots.sh` — hard block
+- Always show dry-run output before running the real command
+- Log path `~/clean-my-mac-log-$(date +%Y-%m-%d).txt` — compute date at runtime, never hardcode
