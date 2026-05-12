@@ -1,0 +1,16 @@
+{
+  "name": "clean-my-mac",
+  "description": "Safe, staged disk cleanup for macOS developers. Recovers real space from Xcode, Docker, node_modules, AI models, and caches without touching anything macOS needs.",
+  "author": {
+    "name": "Shahriar",
+    "url": "https://github.com/shihabshahrier"
+  },
+  "skills": [
+    {
+      "name": "clean-my-mac",
+      "description": "Analyze and recover disk space on macOS safely. Dry-run first, confirm before delete.",
+      "source": "../",
+      "category": "productivity"
+    }
+  ]
+}

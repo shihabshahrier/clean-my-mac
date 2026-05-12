@@ -1,0 +1,22 @@
+# macOS system files
+.DS_Store
+.DS_Store?
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.env
+
+# Runtime output (generated in home dir, but just in case)
+clean-my-mac-log-*.txt
+clean-my-mac-report-*.md
+*.log

@@ -1,0 +1,39 @@
+# mac-storage-guardian: protected_paths.txt
+# Paths that must NEVER be deleted by any cleanup script.
+# One path per line. Scripts check this file before any rm operation.
+
+# System integrity
+/System
+/usr
+/bin
+/sbin
+/private/var/db
+/Library/Security
+/Library/Keychains
+
+# User critical data
+~/.ssh
+~/Library/Keychains
+~/.gnupg
+~/.aws
+~/.config
+~/.kube
+~/.docker/config.json
+
+# Apple data that's irreplaceable
+~/Library/Mail
+~/Photos Library.photoslibrary
+~/Pictures/Photos Library.photoslibrary
+~/Library/Application Support/MobileSync/Backup
+
+# Credentials and auth
+~/.netrc
+~/.npmrc
+~/.pypirc
+~/.gitconfig
+~/.gitcredentials
+
+# User documents (never auto-delete)
+~/Documents
+~/Desktop
+~/Downloads

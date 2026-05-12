@@ -1,0 +1,152 @@
+{
+  "version": "1.0",
+  "rules": [
+    {
+      "id": "user-caches",
+      "label": "User Caches",
+      "path": "~/Library/Caches",
+      "risk": "LOW",
+      "auto_regenerated": true,
+      "requires_sudo": false,
+      "requires_confirmation": "phase",
+      "script": "cleanup_caches.sh"
+    },
+    {
+      "id": "system-caches",
+      "label": "System Caches",
+      "path": "/Library/Caches",
+      "risk": "LOW",
+      "auto_regenerated": true,
+      "requires_sudo": true,
+      "requires_confirmation": "phase",
+      "script": "cleanup_caches.sh"
+    },
+    {
+      "id": "user-logs",
+      "label": "User Logs",
+      "path": "~/Library/Logs",
+      "risk": "LOW",
+      "auto_regenerated": true,
+      "requires_sudo": false,
+      "requires_confirmation": "phase",
+      "script": "cleanup_caches.sh"
+    },
+    {
+      "id": "trash",
+      "label": "Trash",
+      "path": "~/.Trash",
+      "risk": "LOW",
+      "auto_regenerated": false,
+      "requires_sudo": false,
+      "requires_confirmation": "phase",
+      "script": "cleanup_caches.sh"
+    },
+    {
+      "id": "xcode-derived",
+      "label": "Xcode DerivedData",
+      "path": "~/Library/Developer/Xcode/DerivedData",
+      "risk": "LOW",
+      "auto_regenerated": true,
+      "requires_sudo": false,
+      "requires_confirmation": "item",
+      "script": "cleanup_xcode.sh"
+    },
+    {
+      "id": "xcode-archives",
+      "label": "Xcode Archives",
+      "path": "~/Library/Developer/Xcode/Archives",
+      "risk": "HIGH",
+      "auto_regenerated": false,
+      "requires_sudo": false,
+      "requires_confirmation": "double",
+      "warning": "These are your compiled app archives. May be the only copy of past App Store releases.",
+      "script": "cleanup_xcode.sh"
+    },
+    {
+      "id": "ios-simulators",
+      "label": "iOS Simulators",
+      "path": "~/Library/Developer/CoreSimulator/Devices",
+      "risk": "MEDIUM",
+      "auto_regenerated": true,
+      "requires_sudo": false,
+      "requires_confirmation": "item",
+      "warning": "Re-downloading simulators requires time and bandwidth.",
+      "script": "cleanup_xcode.sh"
+    },
+    {
+      "id": "ios-backups",
+      "label": "iOS Device Backups",
+      "path": "~/Library/Application Support/MobileSync/Backup",
+      "risk": "HIGH",
+      "auto_regenerated": false,
+      "requires_sudo": false,
+      "requires_confirmation": "never-auto",
+      "warning": "These are your iPhone/iPad backups. Deleting without iCloud Backup means no restore.",
+      "script": null,
+      "action": "guide_user_to_finder"
+    },
+    {
+      "id": "homebrew",
+      "label": "Homebrew Cache",
+      "path": "~/Library/Caches/Homebrew",
+      "risk": "LOW",
+      "auto_regenerated": true,
+      "requires_sudo": false,
+      "requires_confirmation": "item",
+      "script": "cleanup_homebrew.sh"
+    },
+    {
+      "id": "npm",
+      "label": "npm Cache",
+      "path": "~/.npm",
+      "risk": "LOW",
+      "auto_regenerated": true,
+      "requires_sudo": false,
+      "requires_confirmation": "item",
+      "script": "cleanup_node.sh"
+    },
+    {
+      "id": "pnpm",
+      "label": "pnpm Store",
+      "path": "~/.pnpm-store",
+      "risk": "LOW",
+      "auto_regenerated": true,
+      "requires_sudo": false,
+      "requires_confirmation": "item",
+      "script": "cleanup_node.sh"
+    },
+    {
+      "id": "docker",
+      "label": "Docker Images/Containers",
+      "path": "~/Library/Containers/com.docker.docker",
+      "risk": "MEDIUM",
+      "auto_regenerated": false,
+      "requires_sudo": false,
+      "requires_confirmation": "item",
+      "script": "cleanup_docker.sh"
+    },
+    {
+      "id": "tm-snapshots",
+      "label": "Time Machine Local Snapshots",
+      "path": null,
+      "risk": "MEDIUM",
+      "auto_regenerated": true,
+      "requires_sudo": true,
+      "requires_confirmation": "item",
+      "warning": "Removes local recovery points. Ensure external TM or iCloud backup exists.",
+      "script": "cleanup_snapshots.sh"
+    },
+    {
+      "id": "ai-models",
+      "label": "AI Model Files",
+      "path": null,
+      "risk": "HIGH",
+      "auto_regenerated": false,
+      "requires_sudo": false,
+      "requires_confirmation": "per-file",
+      "warning": "Models can be re-downloaded but may take hours and significant bandwidth.",
+      "script": null,
+      "action": "list_and_prompt"
+    }
+  ]
+}
