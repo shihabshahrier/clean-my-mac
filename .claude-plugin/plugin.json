@@ -4,13 +4,5 @@
   "author": {
     "name": "Shahriar",
     "url": "https://github.com/shihabshahrier"
-  },
-  "skills": [
-    {
-      "name": "clean-my-mac",
-      "description": "Analyze and recover disk space on macOS safely. Dry-run first, confirm before delete.",
-      "source": "../",
-      "category": "productivity"
-    }
-  ]
+  }
 }
