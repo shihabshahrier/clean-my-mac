@@ -1,0 +1,28 @@
+---
+description: Safe, staged macOS disk cleanup. Use when user asks to free up disk space, clean their Mac, or recover storage.
+globs:
+alwaysApply: false
+---
+
+# clean-my-mac
+
+Invoke: `/clean-my-mac` or natural language: "clean my Mac", "free up space", "my Mac is full", "storage is full"
+
+## Phases (in order — never skip)
+- Phase -1: Profile user — active tools, backup status, what to protect
+- Phase 0: Analyze disk — run `scripts/analyze_storage.sh`, zero deletions
+- Phase 1: Safe caches & logs (LOW risk)
+- Phase 2: Developer tools — Homebrew, Xcode, Node, Python, Flutter (LOW–MED)
+- Phase 3: Docker cleanup (MEDIUM)
+- Phase 4: AI model files — list only, never auto-delete (HIGH)
+- Phase 5: Time Machine snapshots — requires confirmed backup (MEDIUM)
+- Phase 6: Large file review — user decides (USER-DECIDES)
+- Phase 7: iCloud optimization — guidance only
+
+## Critical Rules
+- Profile → Analyze → Per-phase confirm → Dry-run → Execute
+- Show consequence warnings (not just confirms) for tools in active_tools
+- NEVER auto-delete ~/Downloads, ~/Documents, ~/Desktop
+- Block Phase 5 if has_backup is no or unknown
+- Check `config/protected_paths.txt` before every deletion
+- Scripts live at `$SKILL_DIR/scripts/` — always use `bash "$SKILL_DIR/scripts/<name>.sh"`

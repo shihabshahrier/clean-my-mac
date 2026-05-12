@@ -1,0 +1,6 @@
+{
+  "name": "clean-my-mac",
+  "description": "Safe, staged macOS disk cleanup. Recovers real space from Xcode, Docker, node_modules, AI models, and caches without touching anything macOS needs.",
+  "version": "1.0.0",
+  "contextFileName": "GEMINI.md"
+}

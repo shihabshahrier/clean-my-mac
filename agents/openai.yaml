@@ -1,0 +1,5 @@
+interface:
+  display_name: "Clean My Mac"
+  short_description: "Safe, staged disk cleanup for macOS developers."
+policy:
+  allow_implicit_invocation: false
