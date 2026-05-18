@@ -19,14 +19,24 @@ PROTECTED="$SCRIPT_DIR/../config/protected_paths.txt"
 log() { echo "$1" | tee -a "$LOG_FILE"; }
 size_kb() { [[ -e "$1" ]] && du -sk "$1" 2>/dev/null | cut -f1 || echo "0"; }
 
+is_protected() {
+  local path="$1"
+  [[ -f "$PROTECTED" ]] || return 1
+  while IFS= read -r pp; do
+    [[ "$pp" =~ ^[[:space:]]*# || -z "${pp// }" ]] && continue
+    local expanded="${pp/#\~/$HOME}"
+    [[ "$path" == "$expanded" || "$path" == "${expanded}/"* ]] && return 0
+  done < "$PROTECTED"
+  return 1
+}
+
 delete_path() {
   local path="$1"
   local label="$2"
   local kb
   kb=$(size_kb "$path")
 
-  # Safety check against protected paths
-  if [[ -f "$PROTECTED" ]] && grep -qF "$path" "$PROTECTED" 2>/dev/null; then
+  if is_protected "$path"; then
     log "  SKIPPED (protected): $path"
     return
   fi
@@ -35,8 +45,12 @@ delete_path() {
     log "  [DRY-RUN] Would delete: $path (~$(echo "$kb/1024" | bc) MB)"
   else
     if [[ -e "$path" ]]; then
-      rm -rf "$path" 2>/dev/null && log "  ✅ Deleted: $label (~$(echo "$kb/1024" | bc) MB)" || log "  ⚠️  Failed: $path"
-      FREED=$((FREED + kb))
+      if rm -rf "$path" 2>/dev/null; then
+        log "  ✅ Deleted: $label (~$(echo "$kb/1024" | bc) MB)"
+        FREED=$((FREED + kb))
+      else
+        log "  ⚠️  Failed: $path"
+      fi
     fi
   fi
 }
@@ -49,9 +63,10 @@ else
 fi
 log "=== Phase 1: Caches & Logs — $(date) ==="
 
-# User caches
+# User caches (Homebrew excluded — Phase 2 handles it via `brew cleanup`)
 echo -e "\n${BOLD}User Caches (~/Library/Caches):${RESET}"
 for dir in ~/Library/Caches/*/; do
+  [[ "$(basename "$dir")" == "Homebrew" ]] && continue
   delete_path "$dir" "$(basename "$dir") cache"
 done
 

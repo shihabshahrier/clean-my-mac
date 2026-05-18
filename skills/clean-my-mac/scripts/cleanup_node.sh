@@ -52,10 +52,17 @@ echo ""
 echo -e "${YELLOW}${BOLD}node_modules directories found in your home folder:${RESET}"
 echo "(These are NOT auto-deleted — review and delete manually if desired)"
 echo ""
-NM_LIST=$(timeout 15 find ~ -name "node_modules" -type d \
-  -not -path "*/\.*" \
-  -not -path "*/node_modules/*/node_modules" \
-  2>/dev/null)
+_nm_find() {
+  find ~ -name "node_modules" -type d \
+    -not -path "*/\.*" \
+    -not -path "*/node_modules/*/node_modules" \
+    2>/dev/null || true
+}
+if command -v timeout &>/dev/null; then
+  NM_LIST=$(timeout 15 bash -c "$(declare -f _nm_find); _nm_find")
+else
+  NM_LIST=$(_nm_find)
+fi
 
 if [[ -z "$NM_LIST" ]]; then
   echo "  No node_modules found."
