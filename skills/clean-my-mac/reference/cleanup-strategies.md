@@ -163,6 +163,83 @@ docker network prune -f       # unused networks
 
 ---
 
+## Go
+
+```bash
+# Module cache size
+du -sh ~/go/pkg 2>/dev/null
+
+# Clean module cache (re-downloaded on next build)
+go clean -modcache
+
+# Clean build + test cache
+go clean -cache -testcache
+```
+
+---
+
+## Stale Toolchains
+
+```bash
+# Check if Rust is actually used (binary in PATH?)
+command -v rustc &>/dev/null || echo "rustc not found — ~/.rustup may be stale"
+du -sh ~/.rustup ~/.cargo 2>/dev/null
+
+# Check if Flutter/Dart is actually used
+command -v flutter &>/dev/null || command -v dart &>/dev/null || echo "Flutter/Dart not found — ~/.pub-cache may be stale"
+du -sh ~/.pub-cache 2>/dev/null
+
+# Remove stale toolchains (only if binary not in PATH)
+rm -rf ~/.rustup ~/.cargo    # Rust
+rm -rf ~/.pub-cache           # Flutter/Dart
+```
+
+---
+
+## VS Code
+
+```bash
+# Find duplicate extensions (multiple versions installed)
+ls -1 ~/.vscode/extensions/ | sed 's/-[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*.*//' | sort | uniq -d
+
+# Cached extension downloads (safe to delete)
+du -sh ~/Library/Application\ Support/Code/CachedExtensionVSIXs 2>/dev/null
+rm -rf ~/Library/Application\ Support/Code/CachedExtensionVSIXs
+
+# WebStorage cache
+du -sh ~/Library/Application\ Support/Code/WebStorage 2>/dev/null
+rm -rf ~/Library/Application\ Support/Code/WebStorage
+```
+
+---
+
+## Large Log Files
+
+```bash
+# Find log files >50MB anywhere in home
+find ~ -type f -name "*.log" -size +50M -exec du -sh {} \; 2>/dev/null | sort -rh
+
+# Find large files >500MB (catches runaway logs, dumps, etc.)
+find ~ -type f -size +500M -exec du -sh {} \; 2>/dev/null | sort -rh | head -20
+```
+
+---
+
+## Application Support Deep Scan
+
+```bash
+# Top consumers in Application Support (often the biggest folder on Mac)
+du -sh ~/Library/Application\ Support/* 2>/dev/null | sort -rh | head -15
+
+# Common large items:
+# - CloudDocs (iCloud) — managed by macOS, don't delete
+# - Google/Chrome — browser data, user decides
+# - Claude/vm_bundles — VM bundles, re-downloaded on launch
+# - Code (VS Code) — extensions + cached data
+```
+
+---
+
 ## AI Models
 
 ```bash

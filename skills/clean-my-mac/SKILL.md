@@ -56,10 +56,16 @@ SKILL_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)/skills/clean-my-m
 ```
 Phase -1  →  Profile user (who are you, what do you use daily?)
 Phase  0  →  Analyze disk (no deletions — build the picture)
+           →  Includes: APFS-aware disk stats, Application Support drill-down,
+              large file scan (>500MB), large log scan (>50MB),
+              stale toolchain detection, duplicate VS Code extensions,
+              inactive nvm versions
            →  Present findings + proposed cleanup plan
            →  Ask for permission to proceed, phase by phase
 Phase  1  →  Safe caches & logs          [LOW risk]
 Phase  2  →  Developer tools             [LOW–MEDIUM, skip if not relevant]
+Phase 2b  →  Deep dev cleanup            [LOW–MEDIUM: stale toolchains, old
+              VS Code extensions, npx caches, large logs, inactive Node versions]
 Phase  3  →  Docker                      [MEDIUM]
 Phase  4  →  AI model files              [HIGH — list only]
 Phase  5  →  Time Machine snapshots      [MEDIUM — requires backup confirmed]
@@ -126,7 +132,20 @@ After profiling, run the analysis script:
 bash "$SKILL_DIR/scripts/analyze_storage.sh"
 ```
 
-Present the full output table to the user.
+The analysis script now outputs:
+1. **APFS-aware disk stats** — shows real Data volume usage + container free space (not misleading per-volume `df` numbers)
+2. **Standard category table** — caches, dev tools, Docker, AI models, etc.
+3. **Stale toolchain alerts** — flags `.rustup`, `.cargo`, `.pub-cache` when the binary isn't in PATH
+4. **Top 15 home directories** — sorted by size
+5. **Top 10 Application Support entries** — the biggest hidden space consumer on most Macs
+6. **Large files (>500MB)** — catches runaway logs, forgotten downloads, database dumps
+7. **Large hidden files (>500MB)** — same scan inside dotfiles/dot directories
+8. **Large log files (>50MB)** — targeted log file scan
+9. **Duplicate VS Code extensions** — lists extensions with multiple versions installed
+10. **Inactive nvm Node versions** — shows which versions are not currently active
+
+**Review ALL sections.** The biggest wins are often in Application Support and large files,
+not in the standard category table. Do not skip the deep scan results.
 
 Then generate a **Personalized Cleanup Plan** based on USER_PROFILE + analysis results:
 
@@ -252,6 +271,36 @@ du -sh ~/.gradle/caches 2>/dev/null
 ```bash
 pod cache clean --all 2>/dev/null
 ```
+
+### Go
+```bash
+go clean -modcache    # module download cache
+go clean -cache       # build cache
+```
+**If Go in `active_tools`**: "Next `go build` will re-download all modules. Takes 2–5 minutes."
+
+---
+
+## Phase 2b — Deep Developer Cleanup (Risk: LOW–MEDIUM)
+
+Catches things Phase 2 misses: stale toolchains, old VS Code extensions, large log files,
+Application Support bloat, npx caches.
+
+```bash
+bash "$SKILL_DIR/scripts/cleanup_dev_tools.sh" --dry-run
+# Show dry-run output. Then ask: "Looks good? Run it for real?"
+bash "$SKILL_DIR/scripts/cleanup_dev_tools.sh"
+```
+
+This phase handles:
+- **Stale toolchains**: Detects `.rustup`, `.cargo`, `.pub-cache` where the binary isn't in PATH
+- **Old VS Code extensions**: Finds duplicate versions, keeps newest, deletes rest
+- **npx caches**: One-time runner caches in `~/.npm/_npx`
+- **Large log files**: Finds `.log` files >50MB (lists only — doesn't auto-delete)
+- **Inactive nvm Node versions**: Lists versions not currently active
+
+**Important:** Large log files are listed but not auto-deleted — they may be actively written to.
+The agent should present them to the user and ask which to remove.
 
 ---
 

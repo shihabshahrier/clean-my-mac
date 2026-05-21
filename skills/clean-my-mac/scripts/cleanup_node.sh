@@ -21,7 +21,13 @@ if command -v npm &>/dev/null; then
   if [[ "$DRY_RUN" == "true" ]]; then
     echo "  [DRY-RUN] Would run: npm cache clean --force"
   else
-    npm cache clean --force 2>/dev/null && log "✅ npm cache cleared"
+    if npm cache clean --force 2>/dev/null; then
+      log "✅ npm cache cleared"
+    else
+      echo "  ⚠️  npm cache clean failed (likely root-owned files). Removing ~/.npm directly..."
+      rm -rf ~/.npm 2>/dev/null && log "✅ npm cache removed (rm -rf ~/.npm)" || \
+        log "  ❌ Failed to remove ~/.npm — run: sudo chown -R \$(id -u):\$(id -g) ~/.npm"
+    fi
   fi
 fi
 
