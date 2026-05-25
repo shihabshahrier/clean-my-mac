@@ -1,8 +1,8 @@
-# clean-my-mac
+# clean-my-mac 🧹
 
-> Safe, staged macOS disk cleanup for AI coding agents.
+> ⚡ **Safe, staged macOS disk cleanup for developers and AI coding agents.** Recover GBs of storage from Xcode, Docker, node_modules, AI models, and system caches with 100% dry-run safety.
 
-Recovers real space from real culprits — Xcode, Docker, npm, AI models, caches — without touching anything you actually need. Every action is profiled, previewed in dry-run, and confirmed before execution.
+**clean-my-mac** is an intelligent, agent-compatible macOS utility designed to safely reclaim disk space from developer environments (such as Xcode DerivedData, Docker volumes, npm/pnpm/yarn caches, and Hugging Face AI models) and system cache bloat. Every cleanup action is profiled, previewed in a dry-run, and requires explicit per-phase confirmation.
 
 ---
 

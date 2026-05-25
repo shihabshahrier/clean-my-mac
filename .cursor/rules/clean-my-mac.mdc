@@ -1,5 +1,5 @@
 ---
-description: Safe, staged macOS disk cleanup. Use when user asks to free up disk space, clean their Mac, or recover storage.
+description: Safe, staged macOS disk cleanup for developers and AI agents. Use when user asks to free up disk space, recover system storage, clear caches, prune Docker, clean Xcode DerivedData, delete node_modules, or manage local Time Machine snapshots on macOS.
 globs:
 alwaysApply: false
 ---

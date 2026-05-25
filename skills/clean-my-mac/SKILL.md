@@ -1,10 +1,10 @@
 ---
 name: clean-my-mac
 description: >
-  Analyze macOS disk usage and recover space across 7 staged, safe phases.
-  Profiles the user first, then scans — never deletes without per-phase approval.
-  Protects active tools (npm, Xcode, Docker) with consequence warnings, not just confirms.
-  Works on any Mac; optimized for M1/M2/M3 256 GB SSD.
+  Safely analyze macOS disk usage and recover GBs of storage across 7 staged, safe phases.
+  An agent-compatible macOS utility to clean Xcode DerivedData, prune Docker, empty caches, clear logs, remove node_modules, and manage local Time Machine snapshots.
+  Profiles the user first, then dry-runs and checks protected_paths before deletion.
+  Works on Intel and Apple Silicon (M1/M2/M3/M4) Macs.
 license: MIT
 user-invocable: true
 when_to_use: >
