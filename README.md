@@ -163,4 +163,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Read [CLAUDE.md](CLAUDE.md) first.
 
 ---
 
-📖 **Project page:** https://shihub.online/projects/clean-my-mac
+📖 **Project page:** https://shihub.site/projects/clean-my-mac
